@@ -5,26 +5,26 @@ from pygame.locals import *
 import numpy
 import matplotlib.pyplot as plt
 
-SW = 280
-SH = 511
+SW = 280 #screen width
+SH = 511 #screen height
 
-BASEY = SH *0.8
-IMAGES = {}
-pygame.font.init()
-WINDOW = pygame.display.set_mode((SW,SH))
-Font = pygame.font.SysFont("comicsans",30)
-BIRD = 'imgs/bird1.png'
-BG = 'imgs/bg.png'
-PIPE = 'imgs/pipe.png'
-Q=numpy.zeros((7,21,2),dtype = float)
-FPS = 32
-def static():
-	birdxpos = int(SW/5)
-	birdypos = int((SH - IMAGES['bird'].get_height())/2)
-	basex = 0
-	while (True):
-		for event in pygame.event.get():
-			if event.type == QUIT:
+BASEY = SH *0.8 #base height
+IMAGES = {} #dictionary of images
+pygame.font.init() #initializing font
+WINDOW = pygame.display.set_mode((SW,SH)) #setting window
+Font = pygame.font.SysFont("comicsans",30) #setting font
+BIRD = 'imgs/bird1.png' #bird image
+BG = 'imgs/bg.png' #background image
+PIPE = 'imgs/pipe.png' 	#pipe image
+Q=numpy.zeros((7,21,2),dtype = float) #Q table size 7*21*2 (x,y,jump or not) initialized to 0 
+FPS = 32 #frames per second
+def static(): #static screen
+	birdxpos = int(SW/5) #bird x position in the screen i.e. 1/5th of the screen width used for centering
+	birdypos = int((SH - IMAGES['bird'].get_height())/2) #bird y position in the screen i.e. 1/2 of the screen height - bird height used for centering
+	basex = 0 #base x position in the screen i.e. 0 used for scrolling
+	while (True): #infinite loop for static screen until space or up key is pressed
+		for event in pygame.event.get(): #event handling loop for static screen
+			if event.type == QUIT: #if quit button is pressed then quit the game
 				pygame.quit()
 				sys.exit()
 
@@ -40,6 +40,7 @@ def static():
 				WINDOW.blit(text2,(10,50))
 				pygame.display.update()
 				FPSCLOCK.tick(FPS)
+
 
 def game_start(generation,x,y):
 	score = 0
