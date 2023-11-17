@@ -12,7 +12,7 @@ BASEY = SH *0.8 #base height
 IMAGES = {} #dictionary of images
 pygame.font.init() #initializing font
 WINDOW = pygame.display.set_mode((SW,SH)) #setting window
-Font = pygame.font.SysFont("comicsans",30) #setting font
+Font = pygame.font.SysFont("comicsans",20) #setting font
 BIRD = 'imgs/bird1.png' #bird image
 BG = 'imgs/bg.png' #background image
 PIPE = 'imgs/pipe.png' 	#pipe image
@@ -25,96 +25,96 @@ def static(): #static screen
 	while (True): #infinite loop for static screen until space or up key is pressed
 		for event in pygame.event.get(): #event handling loop for static screen
 			if event.type == QUIT: #if quit button is pressed then quit the game
-				pygame.quit()
+				pygame.quit() 
 				sys.exit()
 
-			elif event.type == KEYDOWN and (event.key == K_SPACE or event.key == K_UP):
+			elif event.type == KEYDOWN and (event.key == K_SPACE or event.key == K_UP): #if space or up key is pressed then start the game
 				return
-			else :
-				WINDOW.blit(IMAGES['background'],(0,0))
-				WINDOW.blit(IMAGES['bird'],(birdxpos,birdypos))
-				WINDOW.blit(IMAGES['base'],(basex,BASEY))
-				text1 = Font.render("AI PROJECT",1,(255,255,255))
-				text2 = Font.render("HARKISHAN SINGH",1,(255,255,255))
-				WINDOW.blit(text1,(SW/2 ,SH/2))
-				WINDOW.blit(text2,(10,50))
-				pygame.display.update()
-				FPSCLOCK.tick(FPS)
+			else : #else display the static screen
+				WINDOW.blit(IMAGES['background'],(0,0)) #blit background image
+				WINDOW.blit(IMAGES['bird'],(birdxpos,birdypos)) #blit bird image at the center of the screen
+				WINDOW.blit(IMAGES['base'],(basex,BASEY)) #blit base image at the bottom of the screen
+				text1 = Font.render("Flappy Bot",1,(255,255,255)) #render text 
+				text2 = Font.render("Yousra",1,(255,255,255))
+				WINDOW.blit(text1,(SW/2 ,SH/2)) #blit text at the center of the screen
+				WINDOW.blit(text2,(10,50)) #blit text at the top left corner of the screen
+				pygame.display.update() #update the display 
+				FPSCLOCK.tick(FPS) #tick the clock with FPS
 
+ 
+def game_start(generation,x,y): #game start function takes generation number and x,y lists for plotting 
+	score = 0  #score initialized to 0 
+	birdxpos = int(SW/5) #bird x position in the screen i.e. 1/5th of the screen width used for centering
+	birdypos = int(SH/2) #bird y position in the screen i.e. 1/2 of the screen height used for centering
+	basex1 = 0 #base x position in the screen i.e. 0 used for scrolling 
+	basex2 = SW #base x position in the screen i.e. screen width used for scrolling 
 
-def game_start(generation,x,y):
-	score = 0
-	birdxpos = int(SW/5)
-	birdypos = int(SH/2)
-	basex1 = 0
-	basex2 = SW
+	bgx1=0 #background x position in the screen i.e. 0 used for scrolling
+	bgx2 = IMAGES['background'].get_width() #background x position in the screen i.e. background width used for scrolling 
 
-	bgx1=0
-	bgx2 = IMAGES['background'].get_width()
-
-	newPipe1 = get_new_pipe()
-	newPipe2 = get_new_pipe()
+	newPipe1 = get_new_pipe() #get new pipe from get_new_pipe function
+	newPipe2 = get_new_pipe() #get new pipe 
 
 	up_pipes = [
 	{'x':SW +200,'y': newPipe1[0]['y']},
 	{'x':SW +500 ,'y': newPipe2[0]['y']}
-	]
+	] #list of upper pipes 
 
 	bttm_pipes = [
 	{'x':SW+200,'y':newPipe1[1]['y']},
 	{'x':SW +500 ,'y': newPipe2[1]['y']}
-	]
+	] #list of bottom pipes
 
-	pipeVelx = -4
+	pipeVelx = -4 #pipe velocity in x direction i.e. -4
 
-	birdyvel = -9
-	birdymaxvel = 10
-	birdyvelmin = -8
-	birdyacc = 1
+	birdyvel = -9 #bird velocity in y direction i.e. -9
+	birdymaxvel = 10 #bird maximum velocity in y direction i.e. 10
+	birdyvelmin = -8 #bird minimum velocity in y direction i.e. -8
+	birdyacc = 1 #bird acceleration in y direction i.e. 1
 
-	playerFlapAccv = -8
-	playerFlapped =False
+	playerFlapAccv = -8 #player flap acceleration in y direction i.e. -8
+	playerFlapped =False #player flapped boolean variable initialized to false 
 	
-	while(True):
+	while(True): #infinite loop for game start until quit button is pressed
 		
-		x_prev,y_prev = convert(birdxpos,birdypos,bttm_pipes)
-		jump = ai_play(x_prev,y_prev)
+		x_prev,y_prev = convert(birdxpos,birdypos,bttm_pipes) #convert bird position and pipe position to x,y coordinates for Q table
+		jump = ai_play(x_prev,y_prev) #get jump or not from ai_play function
 
-		for event in pygame.event.get():
-			if event.type == QUIT:
-				plt.scatter(x,y)
-				plt.xlabel("GENERATION/Number of Trials")
+		for event in pygame.event.get(): #event handling loop for game start screen	
+			if event.type == QUIT: 		#if quit button is pressed then quit the game
+				plt.scatter(x,y) 		#plot the graph
+				plt.xlabel("GENERATION/Number of Trials") 
 				plt.ylabel("SCORE")
 				plt.title("Flappy Birds : AI Project")
 				plt.show()
-				pygame.quit()
+				pygame.quit() 	
 				sys.exit()
 				
 
-		if jump:
-			if birdypos>0:
-				birdyvel = playerFlapAccv
-				playerFlapped = True
+		if jump: #if jump is true then bird jumps
+			if birdypos>0: 		#bird position is greater than 0
+				birdyvel = playerFlapAccv  #bird velocity is set to player flap acceleration
+				playerFlapped = True 		#player flapped is set to true
 
 		
 
 		
 		
-		playerMidPos= birdxpos + IMAGES['bird'].get_width()/2
-		for pipe in up_pipes:
-			pipeMidPos = pipe ['x'] +IMAGES['pipe'][0].get_width()/2
-			if pipeMidPos <= playerMidPos < pipeMidPos +4 :
-				score += 1
+		playerMidPos= birdxpos + IMAGES['bird'].get_width()/2 		#player middle position is set to bird x position + bird width/2
+		for pipe in up_pipes:  		#loop for upper pipes
+			pipeMidPos = pipe ['x'] +IMAGES['pipe'][0].get_width()/2 		#pipe middle position is set to pipe x position + pipe width/2
+			if pipeMidPos <= playerMidPos < pipeMidPos +4 : 		#if pipe middle position is less than player middle position and player middle position is less than pipe middle position + 4
+				score += 1 			#score is incremented by 1
 
 
-		if birdyvel < birdymaxvel and not playerFlapped:
-			birdyvel += birdyacc
+		if birdyvel < birdymaxvel and not playerFlapped:  #if bird velocity is less than bird maximum velocity and player flapped is false
+			birdyvel += birdyacc 		#bird velocity is incremented by bird acceleration
 
 
-		if playerFlapped:
-			playerFlapped = False
+		if playerFlapped: 		#if player flapped is true
+			playerFlapped = False 		#player flapped is set to false
 
-		playerHeight = IMAGES['bird'].get_height()
+		playerHeight = IMAGES['bird'].get_height() 		#player height is set to bird height
 
 		birdypos = birdypos + min (birdyvel, BASEY - birdypos -playerHeight)
 
