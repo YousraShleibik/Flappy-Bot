@@ -3,6 +3,7 @@ import pygame
 import random
 import sys
 import matplotlib.pyplot as plt
+import time
 
 ############### Set up the game environment #####################
 #Initialize Pygame
@@ -57,41 +58,6 @@ def draw_pipes(pipes):
             screen.blit(top_pipe_image, pipe)
 
 
-# Main game loop
-while True:
-    # Event loop
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            exit()
-        if event.type == pygame.KEYDOWN and game_active:
-            if event.key == pygame.K_SPACE:
-                bird_movement = 0
-                bird_movement -= 6
-
-    # Bird movement
-    bird_movement += gravity
-    bird_y += bird_movement
-
-    # Display background
-    screen.blit(background_image, (0, 0))
-
-    # Pipes
-    time_now = pygame.time.get_ticks()
-    if time_now - last_pipe > pipe_frequency:
-        last_pipe = time_now
-        pipes.extend(create_pipe())
-    pipes = move_pipes(pipes)
-    draw_pipes(pipes)
-
-    # Display bird
-    screen.blit(bird_image, (bird_x, int(bird_y)))
-
-    # Update the display
-    pygame.display.update()
-
-    # Frame rate
-    clock.tick(60)
 
 
 
@@ -133,9 +99,54 @@ def choose_action(state):
     return action    
 
 ################ Define the state and action spaces #####################
-
+# Define the state space
+def get_state(bird_y, pipes):
+    if len(pipes) > 0:
+        pipe_x = pipes[0].centerx
+        pipe_y = pipes[0].centery
+        state = [bird_y, pipe_x, pipe_y]
+    else:
+        state = [bird_y, 0, 0]
+    return state
 ################ Implement the Q-learning algorithm #####################
 
 ################ Train the Q-learning agent #####################
 
 ################ Test the trained agent #####################
+
+
+# Main game loop
+while True:
+    # Event loop
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            exit()
+        if event.type == pygame.KEYDOWN and game_active:
+            if event.key == pygame.K_SPACE:
+                bird_movement = 0
+                bird_movement -= 6
+
+    # Bird movement
+    bird_movement += gravity
+    bird_y += bird_movement
+
+    # Display background
+    screen.blit(background_image, (0, 0))
+
+    # Pipes
+    time_now = pygame.time.get_ticks()
+    if time_now - last_pipe > pipe_frequency:
+        last_pipe = time_now
+        pipes.extend(create_pipe())
+    pipes = move_pipes(pipes)
+    draw_pipes(pipes)
+
+    # Display bird
+    screen.blit(bird_image, (bird_x, int(bird_y)))
+
+    # Update the display
+    pygame.display.update()
+
+    # Frame rate
+    clock.tick(60)
