@@ -9,13 +9,18 @@ import matplotlib.pyplot as plt
 pygame.init()
 
 # Game variables
-screen_width = 280
-screen_height = 500
+
+
+screen_width = 400
+screen_height = 600
 bird_y = screen_height // 2
 bird_x = 50
 gravity = 0.25
 bird_movement = 0
 game_active = True
+pipe_heights = [200, 300, 400]  # Example heights
+pipe_frequency = 1500  # Milliseconds
+last_pipe = pygame.time.get_ticks()
 
 # Set up the screen
 screen = pygame.display.set_mode((screen_width, screen_height))
@@ -38,8 +43,8 @@ while True:
                 bird_movement -= 6
 
     # Bird movement
-    bird_movement += gravity
-    bird_y += bird_movement
+    #bird_movement += gravity
+    #bird_y += bird_movement
 
     # Display background
     screen.blit(background_image, (0, 0))
