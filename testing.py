@@ -29,6 +29,33 @@ clock = pygame.time.Clock()
 # Load images
 bird_image = pygame.image.load('imgs/bird1.png').convert_alpha()
 background_image = pygame.image.load('imgs/bg.png').convert_alpha()
+top_pipe_image = pygame.image.load('imgs/pipe1.png').convert_alpha()
+bottom_pipe_image = pygame.image.load('imgs/pipe.png').convert_alpha()
+
+# Pipe list
+pipes = []
+
+# Function to create pipes
+def create_pipe():
+    random_pipe_pos = random.choice(pipe_heights)
+    bottom_pipe = bottom_pipe_image.get_rect(midtop=(500, random_pipe_pos))
+    top_pipe = top_pipe_image.get_rect(midbottom=(500, random_pipe_pos - 150))  # 150 is the gap between pipes
+    return bottom_pipe, top_pipe
+
+# Function to move pipes
+def move_pipes(pipes):
+    for pipe in pipes:
+        pipe.centerx -= 5  # Speed of pipe movement
+    return pipes
+
+# Function to draw pipes
+def draw_pipes(pipes):
+    for pipe in pipes:
+        if pipe.bottom >= screen_height:
+            screen.blit(bottom_pipe_image, pipe)
+        else:
+            screen.blit(top_pipe_image, pipe)
+
 
 # Main game loop
 while True:
@@ -43,11 +70,19 @@ while True:
                 bird_movement -= 6
 
     # Bird movement
-    #bird_movement += gravity
-    #bird_y += bird_movement
+    bird_movement += gravity
+    bird_y += bird_movement
 
     # Display background
     screen.blit(background_image, (0, 0))
+
+    # Pipes
+    time_now = pygame.time.get_ticks()
+    if time_now - last_pipe > pipe_frequency:
+        last_pipe = time_now
+        pipes.extend(create_pipe())
+    pipes = move_pipes(pipes)
+    draw_pipes(pipes)
 
     # Display bird
     screen.blit(bird_image, (bird_x, int(bird_y)))
