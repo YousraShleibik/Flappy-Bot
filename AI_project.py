@@ -116,87 +116,87 @@ def game_start(generation,x,y): #game start function takes generation number and
 
 		playerHeight = IMAGES['bird'].get_height() 		#player height is set to bird height
 
-		birdypos = birdypos + min (birdyvel, BASEY - birdypos -playerHeight)
+		birdypos = birdypos + min (birdyvel, BASEY - birdypos -playerHeight) #bird y position is set to bird y position + minimum of bird velocity, base y position - bird y position - player height
 
-		for upperPipe,lowerPipe in zip(up_pipes,bttm_pipes):
-			upperPipe['x'] += pipeVelx
-			lowerPipe['x'] += pipeVelx
+		for upperPipe,lowerPipe in zip(up_pipes,bttm_pipes): 		#loop for upper and bottom pipes
+			upperPipe['x'] += pipeVelx 		#upper pipe x position is incremented by pipe velocity in x direction
+			lowerPipe['x'] += pipeVelx	    #bottom pipe x position is incremented by pipe velocity in x direction
 
-		if (0<up_pipes[0]['x']<5):
-			newPipe = get_new_pipe()
-			up_pipes.append(newPipe[0])
-			bttm_pipes.append(newPipe[1])
+		if (0<up_pipes[0]['x']<5): 		#if upper pipe x position is greater than 0 and less than 5
+			newPipe = get_new_pipe() 		#get new pipe from get_new_pipe function
+			up_pipes.append(newPipe[0]) 	#append upper pipe to upper pipe list
+			bttm_pipes.append(newPipe[1])   #append bottom pipe to bottom pipe list
 
-		if(up_pipes[0]['x'] < -IMAGES['pipe'][0].get_width() ):
-			up_pipes.pop(0)
-			bttm_pipes.pop(0)
-		basex1-=4
-		basex2-=4
-		if(basex1 <= -IMAGES['base'].get_width()):
-			basex1 = basex2
-			basex2 = basex1 + IMAGES['base'].get_width()
+		if(up_pipes[0]['x'] < -IMAGES['pipe'][0].get_width() ): #if upper pipe x position is less than negative of pipe width
+			up_pipes.pop(0) 	#pop the first element of upper pipe list
+			bttm_pipes.pop(0)   #pop the first element of bottom pipe list
+		basex1-=4 #base x position is decremented by 4
+		basex2-=4 		#base x position is decremented by 4
+		if(basex1 <= -IMAGES['base'].get_width()): 		#if base x position is less than negative of base width
+			basex1 = basex2 			#base x position is set to base x position 2
+			basex2 = basex1 + IMAGES['base'].get_width() 	#base x position 2 is set to base x position + base width
 
-		bgx1-=2
-		bgx2-=2
-		if(bgx1 <= -IMAGES['background'].get_width()):
-			bgx1 = bgx2
-			bgx2 = bgx1 + IMAGES['background'].get_width()
-		crashTest = Collision(birdxpos,birdypos,up_pipes,bttm_pipes)
-		x_new,y_new = convert(birdxpos,birdypos,bttm_pipes)
-		if crashTest:
-			reward = -1000
-			Q_update(x_prev,y_prev,jump,reward,x_new,y_new)
-			return score
+		bgx1-=2 		#background x position is decremented by 2
+		bgx2-=2 		#background x position is decremented by 2
+		if(bgx1 <= -IMAGES['background'].get_width()): 	#if background x position is less than negative of background width
+			bgx1 = bgx2 	#background x position is set to background x position 2
+			bgx2 = bgx1 + IMAGES['background'].get_width() 		#background x position 2 is set to background x position + background width
+		crashTest = Collision(birdxpos,birdypos,up_pipes,bttm_pipes) 	#crash test is set to collision function
+		x_new,y_new = convert(birdxpos,birdypos,bttm_pipes) 	#convert bird position and pipe position to x,y coordinates for Q table
+		if crashTest: 		#if crash test is true
+			reward = -1000 		#reward is set to -1000
+			Q_update(x_prev,y_prev,jump,reward,x_new,y_new) 		#update Q table
+			return score 		#return score
 
-		reward = 15
+		reward = 15 		#reward is set to 15
 
-		Q_update(x_prev,y_prev,jump,reward,x_new,y_new)
+		Q_update(x_prev,y_prev,jump,reward,x_new,y_new) 		#update Q table
 
-		WINDOW.blit(IMAGES['background'],(bgx1,0))
-		WINDOW.blit(IMAGES['background'],(bgx2,0))
-		for upperPipe,lowerPipe in zip(up_pipes,bttm_pipes):
-			WINDOW.blit(IMAGES['pipe'][0],(upperPipe['x'],upperPipe['y']))
-			WINDOW.blit(IMAGES['pipe'][1],(lowerPipe['x'],lowerPipe['y']))
-		WINDOW.blit(IMAGES['base'],(basex1,BASEY))
-		WINDOW.blit(IMAGES['base'],(basex2,BASEY))
-		text1 = Font.render("Score: "+ str(score),1,(255,255,255))
-		text2 = Font.render("Generation: "+ str(generation),1,(255,255,255))
-		WINDOW.blit(text1,(SW - 10 -text1.get_width(),10))
-		WINDOW.blit(text2,(0,0))
-		WINDOW.blit(IMAGES['bird'],(birdxpos,birdypos))
+		WINDOW.blit(IMAGES['background'],(bgx1,0)) 		#blit background image
+		WINDOW.blit(IMAGES['background'],(bgx2,0)) 		#blit background image
+		for upperPipe,lowerPipe in zip(up_pipes,bttm_pipes): 		#loop for upper and bottom pipes 
+			WINDOW.blit(IMAGES['pipe'][0],(upperPipe['x'],upperPipe['y'])) 		#blit upper pipe image for pipe 0
+			WINDOW.blit(IMAGES['pipe'][1],(lowerPipe['x'],lowerPipe['y']))  	#blit bottom pipe image for pipe 1
+		WINDOW.blit(IMAGES['base'],(basex1,BASEY)) 		#blit base image for base 1
+		WINDOW.blit(IMAGES['base'],(basex2,BASEY)) 		#blit base image for base 2 
+		text1 = Font.render("Score: "+ str(score),1,(255,255,255)) 		#render text of score
+		text2 = Font.render("Generation: "+ str(generation),1,(255,255,255)) 	#render text of generation
+		WINDOW.blit(text1,(SW - 10 -text1.get_width(),10)) 		#blit text of score in the top right corner of the screen
+		WINDOW.blit(text2,(0,0)) 		#blit text of generation in the top left corner of the screen
+		WINDOW.blit(IMAGES['bird'],(birdxpos,birdypos)) 		#blit bird image at the center of the screen
 
-		pygame.display.update()
-		FPSCLOCK.tick()
+		pygame.display.update() 		#update the display for every frame
+		FPSCLOCK.tick() 		#tick the clock with FPS
 
-def Collision(birdxpos,birdypos,up_pipes,bttm_pipes):
-	if (birdypos >= BASEY - IMAGES['bird'].get_height() or birdypos < 0):
-		return True
-	for pipe in up_pipes:
-		pipeHeight = IMAGES['pipe'][0].get_height()
-		if(birdypos < pipeHeight + pipe['y'] and abs(birdxpos - pipe['x']) < IMAGES['pipe'][0].get_width()):
-			return True
+def Collision(birdxpos,birdypos,up_pipes,bttm_pipes): #collision function takes bird x position, bird y position, upper pipe list and bottom pipe list
+	if (birdypos >= BASEY - IMAGES['bird'].get_height() or birdypos < 0): #if bird y position is greater than base y position - bird height or bird y position is less than 0
+		return True #return true
+	for pipe in up_pipes: 		#loop for upper pipes to check collision
+		pipeHeight = IMAGES['pipe'][0].get_height() 		#pipe height is set to pipe height
+		if(birdypos < pipeHeight + pipe['y'] and abs(birdxpos - pipe['x']) < IMAGES['pipe'][0].get_width()): #if bird y position is less than pipe height + pipe y position and absolute value of bird x position - pipe x position is less than pipe width
+			return True 
 
-	for pipe in bttm_pipes:
-		if (birdypos + IMAGES['bird'].get_height() > pipe['y'] and abs(birdxpos - pipe['x']) < IMAGES['pipe'][0].get_width()):
+	for pipe in bttm_pipes: 		#loop for bottom pipes to check collision
+		if (birdypos + IMAGES['bird'].get_height() > pipe['y'] and abs(birdxpos - pipe['x']) < IMAGES['pipe'][0].get_width()): 	#if bird y position + bird height is greater than pipe y position and absolute value of bird x position - pipe x position is less than pipe width
 			return True
 	return False
 
 
-def get_new_pipe():
+def get_new_pipe(): #get new pipe function which returns new pipe to replace the old pipe 
 
-	pipeHeight = IMAGES['pipe'][1].get_height()
-	gap = int(SH/4)
-	y2 = int(gap + random.randrange(0,int(SH - IMAGES['base'].get_height() - 1.2*gap)))
-	pipex = int(SW+300 )
-	y1 = int(pipeHeight -y2 +gap)
+	pipeHeight = IMAGES['pipe'][1].get_height() #pipe height is set to pipe height from image dictionary
+	gap = int(SH/4) #gap is set to 1/4th of the screen height which is 127 
+	y2 = int(gap + random.randrange(0,int(SH - IMAGES['base'].get_height() - 1.2*gap))) #y2 is set to gap + random number between 0 and screen height - base height - 1.2*gap
+	pipex = int(SW+300 ) 		#pipe x position is set to screen width + 300
+	y1 = int(pipeHeight -y2 +gap) 	#y1 is set to pipe height - y2 + gap
 
 	pipe = [
 	{'x':pipex,'y':-y1},
 	{'x':pipex,'y':y2}
-	]
+	] 		#pipe list is set to pipe x position and y1 and y2
 	return pipe
 
-def ai_play(x,y):
+def ai_play(x,y): #ai play function takes x,y coordinates from Q table and returns jump or not
 	max=0
 	jump = False
 	
