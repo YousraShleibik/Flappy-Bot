@@ -197,57 +197,57 @@ def get_new_pipe(): #get new pipe function which returns new pipe to replace the
 	return pipe
 
 def ai_play(x,y): #ai play function takes x,y coordinates from Q table and returns jump or not
-	max=0
-	jump = False
+	max=0 #max is set to 0
+	jump = False 		#jump is set to false
 	
 	
-	if(Q[x][y][1]>Q[x][y][0]):
-		max = Q[x][y][1]
-		jump =True
+	if(Q[x][y][1]>Q[x][y][0]): 		#if Q table value of x,y,1 is greater than Q table value of x,y,0
+		max = Q[x][y][1] 		#max is set to Q table value of x,y,1
+		jump =True 		#jump is set to true
 
-	return jump
+	return jump 		#return jump
 
-def convert(birdxpos,birdypos,bttm_pipes):
-	x = min(280, bttm_pipes[0]['x'])
-	y = bttm_pipes[0]['y']-birdypos
-	if(y<0):
-		y=abs(y)+408
-	return int(x/40-1),int(y/40)
-
-
-def Q_update(x_prev,y_prev,jump,reward,x_new,y_new):
+def convert(birdxpos,birdypos,bttm_pipes): #convert function takes bird x position, bird y position and bottom pipe list and returns x,y coordinates for Q table
+	x = min(280, bttm_pipes[0]['x']) 		#x is set to minimum of 280 and bottom pipe x position
+	y = bttm_pipes[0]['y']-birdypos 		#y is set to bottom pipe y position - bird y position
+	if(y<0): 		#if y is less than 0
+		y=abs(y)+408 		#y is set to absolute value of y + 408 to get positive value
+	return int(x/40-1),int(y/40) 			#return x/40-1 and y/40 to get x,y coordinates for Q table
 
 
-	if jump:
-		Q[x_prev][y_prev][1] = 0.4 * Q[x_prev][y_prev][1] + (0.6)*(reward+max(Q[x_new][y_new][0],Q[x_new][y_new][1]))
-	else :
+def Q_update(x_prev,y_prev,jump,reward,x_new,y_new): #Q update function takes x,y coordinates from Q table, jump or not, reward and new x,y coordinates from Q table
+
+
+	if jump: 		#if jump is true then Q table value of x,y,1 is updated 
+		Q[x_prev][y_prev][1] = 0.4 * Q[x_prev][y_prev][1] + (0.6)*(reward+max(Q[x_new][y_new][0],Q[x_new][y_new][1])) 	
+	else : 		#else Q table value of x,y,0 is updated
 		Q[x_prev][y_prev][0] = 0.4 * Q[x_prev][y_prev][0] + (0.6)*(reward+max(Q[x_new][y_new][0],Q[x_new][y_new][1]))
 
 
 
-if __name__=="__main__":
+if __name__=="__main__": #main function
 
-	pygame.init()
-	FPSCLOCK = pygame.time.Clock()
-	pygame.display.set_caption("AI PROJECT")
+	pygame.init() #initializing pygame
+	FPSCLOCK = pygame.time.Clock() 	#setting clock for FPS
+	pygame.display.set_caption("AI PROJECT") 	#setting caption for the game
 
-	IMAGES['base'] = pygame.image.load('imgs/base.png').convert_alpha()
-	IMAGES['pipe'] = ( pygame.transform.rotate(pygame.image.load(PIPE).convert_alpha(),180) , pygame.image.load(PIPE).convert_alpha())
-	IMAGES['background']= pygame.image.load(BG).convert()
-	IMAGES['bird'] = pygame.image.load(BIRD).convert_alpha()
-	generation = 1
-	static()
-	x=[]
-	y=[]
-	while(True):
-		score = game_start(generation,x,y)
-		if (score==-1):
+	IMAGES['base'] = pygame.image.load('imgs/base.png').convert_alpha() #loading base image
+	IMAGES['pipe'] = ( pygame.transform.rotate(pygame.image.load(PIPE).convert_alpha(),180) , pygame.image.load(PIPE).convert_alpha()) 	#loading pipe image
+	IMAGES['background']= pygame.image.load(BG).convert() 		#loading background image
+	IMAGES['bird'] = pygame.image.load(BIRD).convert_alpha() 	#loading bird image
+	generation = 1 #generation initialized to 1
+	static() #calling static function which displays static screen
+	x=[] #x list for plotting
+	y=[] #y list for plotting
+	while(True): #infinite loop for game start
+		score = game_start(generation,x,y) #score is set to game start function
+		if (score==-1): #if score is -1 then break the loop
 			break
-		x.append(generation)
-		y.append(score)
-		generation+=1
+		x.append(generation) #append generation to x list for plotting
+		y.append(score) #append score to y list for plotting
+		generation+=1 #increment generation by 1
 	
 		
-	print(generation)
+	print(generation) #print generation
 
 
