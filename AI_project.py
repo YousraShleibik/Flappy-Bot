@@ -13,7 +13,7 @@ IMAGES = {} #dictionary of images
 pygame.font.init() #initializing font
 WINDOW = pygame.display.set_mode((SW,SH)) #setting window
 Font = pygame.font.SysFont("comicsans",20) #setting font
-BIRD = 'imgs/bird1.png' #bird image
+BIRD = 'imgs/bot1.png' #bird image
 BG = 'imgs/bg.png' #background image
 PIPE = 'imgs/pipe.png' 	#pipe image
 Q=numpy.zeros((7,21,2),dtype = float) #Q table size 7*21*2 (x,y,jump or not) initialized to 0 
@@ -82,7 +82,8 @@ def game_start(generation,x,y): #game start function takes generation number and
 
 		for event in pygame.event.get(): #event handling loop for game start screen	
 			if event.type == QUIT: 		#if quit button is pressed then quit the game
-				plt.scatter(x,y) 		#plot the graph
+				#plt.scatter(x,y) 		#plot the graph
+				plt.plot(x,y, marker='.', markersize=10, color='blue', linewidth=1) #plot the graph
 				plt.xlabel("GENERATION/Number of Trials") 
 				plt.ylabel("SCORE")
 				plt.title("Flappy Birds : AI Project")
